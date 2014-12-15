@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 from multiprocessing import Pool
 
 import utils
+import log
+
+LOG = log.get_logger()
 
 # URL
 SAMPLEURL = []
@@ -32,7 +35,7 @@ def download_pic(url):
     img_name = urlparse.urlparse(url)[2].split('/')[4]
     try:
         urllib.urlretrieve(url, os.path.join(DOWNPATH,img_name))
-        print (img_name + ' ok!')
+        LOG.info(img_name + ' ok!')
     except:
         LOG.error('error: ' + img_name + ' failed!')
 
@@ -43,7 +46,8 @@ def main():
     urlList = get_url_list(SAMPLEURL)
     start_time = datetime.now()
 
-    pool = Pool(len(urlList))
+    # pool = Pool(len(urlList))
+    pool = Pool(8)
     pool.map(download_pic,urlList)
     pool.close()
     pool.join()
