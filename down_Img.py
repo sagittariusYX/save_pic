@@ -3,20 +3,22 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from multiprocessing import Pool
 
-# global variable
-sampleUrl = []
+import utils
+
+# URL
+SAMPLEURL = []
 ori_num = int(raw_input('Input start page :')) - 1
 end_num = int(raw_input('Input final page :'))
 for i in range(ori_num,end_num):
-    sampleUrl.append("http://www.dbmeizi.com/category/1?p=%d#"%i)
+    SAMPLEURL.append(utils.get_config('urladdr','URLSAMPLE')%i)
 
-# For example:
-# downPath = '/Users/yangxiao/Documents/python_py/saveImg/image/'
-downPath = raw_input('Input picture download directory :\n')
-if os.path.isdir(downPath):
+# DOWNPATH
+DOWNPATH = utils.get_config('downpath','DOWNDIR')
+if os.path.isdir(DOWNPATH):
     pass
 else:
-    os.mkdir(downPath)
+    os.mkdir(DOWNPATH)
+
 
 def get_url_list(url):
     aList = []
@@ -29,16 +31,16 @@ def get_url_list(url):
 def download_pic(url):
     img_name = urlparse.urlparse(url)[2].split('/')[4]
     try:
-        urllib.urlretrieve(url, os.path.join(downPath,img_name))
-        print img_name + ' ok!'
+        urllib.urlretrieve(url, os.path.join(DOWNPATH,img_name))
+        print (img_name + ' ok!')
     except:
-        print 'warning: ' + img_name + ' failed!'
+        LOG.error('error: ' + img_name + ' failed!')
 
 def main():
     # import pdb
     # pdb.set_trace()
 
-    urlList = get_url_list(sampleUrl)
+    urlList = get_url_list(SAMPLEURL)
     start_time = datetime.now()
 
     pool = Pool(len(urlList))
