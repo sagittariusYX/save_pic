@@ -40,13 +40,17 @@ def download_pic(url):
     except:
         LOG.error('error: ' + img_name + ' failed!')
 
-def adddirfile(dir):
-    f = zipfile.ZipFile('/Users/yangxiao/Documents/python_py/example.zip','w',zipfile.ZIP_DEFLATED)
-    for dirpath, dirnames, filenames in os.walk(dir):
-        for filename in filenames:
-            f.write(os.path.join(TARGETDIR, filename))
-    f.close()
-    print 'zip finished !'
+def zip_pic(dir):
+    f = zipfile.ZipFile(utils.get_config('zippath','ZIPDIR'),'w',zipfile.ZIP_DEFLATED)
+    try:
+        for dirpath, dirnames, filenames in os.walk(dir):
+            for filename in filenames:
+                f.write(os.path.join(TARGETDIR, filename))
+        f.close()
+        LOG.info('zip finished!')
+        print 'zip finished!'
+    except:
+        LOG.error('error: zip failed!')
 
 def main():
     # import pdb
@@ -60,7 +64,7 @@ def main():
     pool.close()
     pool.join()
 
-    adddirfile(TARGETDIR)
+    zip_pic(TARGETDIR)
 
     end_time = datetime.now()
     # print Finished time
