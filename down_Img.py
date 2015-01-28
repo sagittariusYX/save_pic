@@ -1,9 +1,11 @@
 #!/usr/bin/python
 import os, urllib, urlparse
 import zipfile
+import gevent, threading
 from datetime import datetime
 from bs4 import BeautifulSoup
-from multiprocessing import Pool
+# from multiprocessing import Pool
+from gevent import monkey; monkey.patch_all()
 
 import utils
 import log
@@ -56,13 +58,15 @@ def main():
     # import pdb
     # pdb.set_trace()
 
-    urlList = get_url_list(SAMPLEURL)
     start_time = datetime.now()
+    urlList = get_url_list(SAMPLEURL)
 
-    pool = Pool(len(urlList))
-    pool.map(download_pic,urlList)
-    pool.close()
-    pool.join()
+    # pool = Pool(len(urlList))
+    # pool.map(download_pic,urlList)
+    # pool.close()
+    # pool.join()
+    jobs = [gevent.spawn(download_pic, urlname) for urlname in urlList]
+    gevent.joinall(jobs, timeout = 20)
 
     zip_pic(TARGETDIR)
 

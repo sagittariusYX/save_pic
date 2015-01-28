@@ -6,12 +6,12 @@ import utils
 
 msg = MIMEMultipart()
 
-att2 = MIMEText(open(utils.get_config('zippath','ZIPDIR'), 'rb').read(), 'base64', 'gb2312')
-att2["Content-Type"] = 'application/octet-stream'
-att2["Content-Disposition"] = 'attachment; filename="example.zip"'
-msg.attach(att2)
+att = MIMEText(open(utils.get_config('zippath','ZIPDIR'), 'rb').read(), 'base64', 'gb2312')
+att["Content-Type"] = 'application/octet-stream'
+att["Content-Disposition"] = 'attachment; filename="example.zip"'
+msg.attach(att)
 
-msg['to'] = '983999589@qq.com'
+msg['to'] = '14210240004@fudan.edu.cn'
 msg['from'] = '14210240102@fudan.edu.cn'
 msg['subject'] = 'mail test'
 
