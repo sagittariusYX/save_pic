@@ -1,6 +1,5 @@
 *.py[cod]
-*.so
-*.egg
-*.egg-info
+*.conf
+log.py
 dist
 build
