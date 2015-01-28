@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import os, urllib, urlparse
-import zipfile
+# import zipfile
 import gevent, threading
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -68,7 +68,7 @@ def main():
     jobs = [gevent.spawn(download_pic, urlname) for urlname in urlList]
     gevent.joinall(jobs, timeout = 20)
 
-    zip_pic(TARGETDIR)
+    # zip_pic(TARGETDIR)
 
     end_time = datetime.now()
     # print Finished time
