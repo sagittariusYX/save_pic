@@ -1,5 +1,5 @@
 *.py[cod]
 *.conf
-log.py
+*.log
 dist
 build
