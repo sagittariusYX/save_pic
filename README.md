@@ -23,7 +23,8 @@ ZIPDIR = ../example.zip
    
 [mail_msg]   
 Config the three with your message to, from and subject.   
-MSG_TO = example1@foobar.com   
+For more than one receiver,format as below.   
+MSG_TO = example1@foo.com;example2@bar.com;   
 MSG_FROM = example2@foobar.com   
 MSG_SUBJECT = example subject   
    

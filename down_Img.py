@@ -21,10 +21,14 @@ for i in range(ori_num,end_num):
 
 # TARGETDIR
 TARGETDIR = utils.get_config('downpath','DOWNDIR')
-if os.path.isdir(TARGETDIR):
-    pass
-else:
-    os.mkdir(TARGETDIR)
+try:
+    if os.path.isdir(TARGETDIR):
+        pass
+    else:
+        os.mkdir(TARGETDIR)
+except:
+    print 'dirname exists, change another name!'
+    os._exit(0)
 
 
 def get_url_list(url):
@@ -32,7 +36,7 @@ def get_url_list(url):
     for eachUrl in url:
         try:
             resp = urllib.urlopen(eachUrl)
-        except urllib.URLError, e:
+        except URLError, e:
             LOG.error('error: ' + e.reason + ', ' + e.code())
         soup = BeautifulSoup(resp.read())
         map(aList.append, [str(item.get('src', item.get('data-src'))) for item in soup("img")])
@@ -43,8 +47,11 @@ def download_pic(url):
     try:
         urllib.urlretrieve(url, os.path.join(TARGETDIR,img_name))
         LOG.info(img_name + ' ok!')
-    except:
-        LOG.error('error: ' + img_name + ' failed!')
+    except URLError, e:
+        if 404 == e.code:
+            LOG.error('error: ' + img_name + ' not found, moving on!')
+        else:
+            LOG.error('error: ' + img_name + ' : ' + e)
 
 def zip_pic(dir):
     f = zipfile.ZipFile(utils.get_config('zippath','ZIPDIR'),'w',zipfile.ZIP_DEFLATED)

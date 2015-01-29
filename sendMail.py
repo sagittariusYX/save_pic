@@ -19,9 +19,9 @@ try:
     server = smtplib.SMTP()
     server.connect(utils.get_config('mail_pri', 'SERV_CONN'))
     server.login(utils.get_config('mail_pri', 'LOGIN_ID'),
-    			utils.get_config('mail_pri', 'LOGIN_PWD'))
+                utils.get_config('mail_pri', 'LOGIN_PWD'))
     server.sendmail(msg['from'], msg['to'],msg.as_string())
     server.quit()
-    print 'send successful'
+    print 'all send successful'
 except Exception, e:  
     print str(e) 
