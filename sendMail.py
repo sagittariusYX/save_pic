@@ -11,14 +11,15 @@ att["Content-Type"] = 'application/octet-stream'
 att["Content-Disposition"] = 'attachment; filename="example.zip"'
 msg.attach(att)
 
-msg['to'] = '14210240004@fudan.edu.cn'
-msg['from'] = '14210240102@fudan.edu.cn'
-msg['subject'] = 'mail test'
+msg['to'] = utils.get_config('mail_msg', 'MSG_TO')
+msg['from'] = utils.get_config('mail_msg', 'MSG_FROM')
+msg['subject'] = utils.get_config('mail_msg', 'MSG_SUBJECT')
 
 try:
     server = smtplib.SMTP()
-    server.connect('mail.fudan.edu.cn')
-    server.login('14210240102','lmdrxxnmcjkqw')
+    server.connect(utils.get_config('mail_pri', 'SERV_CONN'))
+    server.login(utils.get_config('mail_pri', 'LOGIN_ID'),
+    			utils.get_config('mail_pri', 'LOGIN_PWD'))
     server.sendmail(msg['from'], msg['to'],msg.as_string())
     server.quit()
     print 'send successful'

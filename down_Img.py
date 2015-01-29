@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import os, urllib, urlparse
-# import zipfile
+import zipfile
 import gevent, threading
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -30,7 +30,11 @@ else:
 def get_url_list(url):
     aList = []
     for eachUrl in url:
-        soup = BeautifulSoup(urllib.urlopen(eachUrl).read())
+        try:
+            resp = urllib.urlopen(eachUrl)
+        except urllib.URLError, e:
+            LOG.error('error: ' + e.reason + ', ' + e.code())
+        soup = BeautifulSoup(resp.read())
         map(aList.append, [str(item.get('src', item.get('data-src'))) for item in soup("img")])
     return tuple(aList)
 
@@ -68,7 +72,7 @@ def main():
     jobs = [gevent.spawn(download_pic, urlname) for urlname in urlList]
     gevent.joinall(jobs, timeout = 20)
 
-    # zip_pic(TARGETDIR)
+    zip_pic(TARGETDIR)
 
     end_time = datetime.now()
     # print Finished time
