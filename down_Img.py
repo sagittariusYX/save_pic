@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import os, urllib, urlparse
 import zipfile
-import gevent, threading
+import gevent
 from datetime import datetime
 from bs4 import BeautifulSoup
 # from multiprocessing import Pool
@@ -43,9 +43,10 @@ def get_url_list(url):
     return tuple(aList)
 
 def download_pic(url):
-    img_name = urlparse.urlparse(url)[2].split('/')[4]
+    img_name = urlparse.urlparse(url).path.split('/')[2]
     try:
-        urllib.urlretrieve(url, os.path.join(TARGETDIR,img_name))
+        # urllib.urlretrieve(url, os.path.join(TARGETDIR,img_name))
+        os.system("wget " + url + " -P " + os.path.join(TARGETDIR))
         LOG.info(img_name + ' ok!')
     except URLError, e:
         if 404 == e.code:
@@ -66,11 +67,9 @@ def zip_pic(dir):
         LOG.error('error: zip failed!')
 
 def main():
-    # import pdb
-    # pdb.set_trace()
-
     start_time = datetime.now()
     urlList = get_url_list(SAMPLEURL)
+    print urlList[0]
 
     # pool = Pool(len(urlList))
     # pool.map(download_pic,urlList)
@@ -79,7 +78,7 @@ def main():
     jobs = [gevent.spawn(download_pic, urlname) for urlname in urlList]
     gevent.joinall(jobs, timeout = 20)
 
-    zip_pic(TARGETDIR)
+    # zip_pic(TARGETDIR)
 
     end_time = datetime.now()
     # print Finished time
